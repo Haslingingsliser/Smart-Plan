@@ -1,28 +1,68 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f0f9f0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f0f4f8;
   color: #333;
   margin: 0;
   padding: 0;
+  transition: 0.3s;
 }
 
 .container {
   max-width: 600px;
-  margin: 50px auto;
-  background: #fff;
-  border-radius: 12px;
+  margin: 30px auto;
   padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h1, h2 {
-  color: #2b7a2b;
+h1 {
   text-align: center;
+  margin-bottom: 25px;
 }
 
-.data-box, .recommendation {
+.data-box p {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.recommendation {
   margin-top: 20px;
   padding: 15px;
-  background: #e8f5e9;
-  border-radius: 8px;
+  background: #eef6e8;
+  border-left: 5px solid #66bb6a;
+  font-weight: bold;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 15px;
+  background: #66bb6a;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #4caf50;
+}
+
+/* Dark Mode */
+.dark-mode {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
+.dark-mode .container {
+  background: #1e1e1e;
+}
+
+.dark-mode .recommendation {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.dark-mode button {
+  background: #81c784;
 }
