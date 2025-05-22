@@ -1,45 +1,53 @@
-// Ganti ini dengan Channel ID dan API Key ThingSpeak Anda
-const CHANNEL_ID = 2970299;
-const READ_API_KEY = "L8C7WH7SG2W6BK1K";
+const apiKey = "L8C7WH7SG2W6BK1K";
+const channelId = "2970299";
 
-const url = `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds/last.json?api_key=${READ_API_KEY}`;
+async function fetchData() {
+  try {
+    const url = `https://api.thingspeak.com/channels/${channelId}/feeds.json?api_key=${apiKey}&results=1`;
+    const response = await fetch(url);
+    const data = await response.json();
+    const latest = data.feeds[0];
 
-function fetchSensorData() {
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      const suhu = parseFloat(data.field1).toFixed(1);
-      const kelembapanUdara = parseFloat(data.field2).toFixed(1);
-      const kelembapanTanah = parseInt(data.field3);
+    const suhu = parseFloat(latest.field1);
+    const kelembapan = parseFloat(latest.field2);
+    const kelembapanTanah = parseFloat(latest.field3);
 
-      document.getElementById("temperature").textContent = suhu;
-      document.getElementById("humidity").textContent = kelembapanUdara;
-      document.getElementById("soil").textContent = kelembapanTanah;
+    document.getElementById("temperature").textContent = suhu.toFixed(1);
+    document.getElementById("humidity").textContent = kelembapan.toFixed(1);
+    document.getElementById("soil").textContent = kelembapanTanah.toFixed(0);
 
-      // Analisis rekomendasi tanaman
-      const recommendation = getPlantRecommendation(kelembapanTanah);
-      document.getElementById("plant-recommendation").textContent = recommendation;
-    })
-    .catch(error => {
-      console.error("Gagal mengambil data:", error);
-    });
-}
+    // Ganti warna berdasarkan kelembapan tanah
+    const soilSpan = document.getElementById("soil");
+    if (kelembapanTanah < 1000) {
+      soilSpan.style.color = "blue";
+    } else if (kelembapanTanah < 2000) {
+      soilSpan.style.color = "green";
+    } else {
+      soilSpan.style.color = "orange";
+    }
 
-// Fungsi rekomendasi berdasarkan kelembapan tanah
-function getPlantRecommendation(soilMoisture) {
-  if (soilMoisture < 1000) {
-    return "Tanah sangat basah — cocok untuk padi, kangkung, atau talas.";
-  } else if (soilMoisture < 2000) {
-    return "Tanah lembab — cocok untuk bayam, selada, atau seledri.";
-  } else if (soilMoisture < 3000) {
-    return "Tanah agak kering — cocok untuk cabai, tomat, atau terong.";
-  } else {
-    return "Tanah kering — cocok untuk tanaman kaktus atau lidah buaya.";
+    tampilkanRekomendasi(kelembapanTanah);
+
+  } catch (error) {
+    console.error("Gagal mengambil data:", error);
   }
 }
 
-// Ambil data saat halaman dibuka
-fetchSensorData();
+function tampilkanRekomendasi(soilMoisture) {
+  const rekomendasiBox = document.getElementById("recommendation");
 
-// Update data setiap 30 detik
-setInterval(fetchSensorData, 30000);
+  if (soilMoisture < 1000) {
+    rekomendasiBox.textContent = "Tanah sangat basah. Cocok untuk padi atau tanaman air.";
+  } else if (soilMoisture < 2000) {
+    rekomendasiBox.textContent = "Tanah lembap. Cocok untuk bayam, kangkung, dan tomat.";
+  } else {
+    rekomendasiBox.textContent = "Tanah kering. Cocok untuk kaktus, singkong, atau tanaman tahan panas.";
+  }
+}
+
+function toggleDarkMode() {
+  document.body.classList.toggle("dark-mode");
+}
+
+fetchData();
+setInterval(fetchData, 30000); // Update setiap 30 detik
