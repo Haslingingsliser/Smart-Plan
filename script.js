@@ -1,5 +1,4 @@
 const channelID = 2970299;
-const apiKey = 'L8C7WH7SG2W6BK1K'; // Read API Key jika dibutuhkan
 const url = `https://api.thingspeak.com/channels/${channelID}/feeds/last.json`;
 
 async function fetchData() {
@@ -15,31 +14,31 @@ async function fetchData() {
     document.getElementById("humidity").textContent = kelembapanUdara.toFixed(1);
     document.getElementById("soil").textContent = kelembapanTanah;
 
-    updateRecommendation(kelembapanTanah);
-  } catch (error) {
-    console.error("Gagal mengambil data dari ThingSpeak:", error);
+    tampilkanRekomendasi(kelembapanTanah);
+  } catch (err) {
+    console.error("Gagal mengambil data dari ThingSpeak:", err);
   }
 }
 
-function updateRecommendation(soilMoisture) {
-  let rekomendasi = "Tanaman tidak diketahui";
+function tampilkanRekomendasi(nilaiTanah) {
+  let saran = "Tidak tersedia";
 
-  if (soilMoisture < 300) {
-    rekomendasi = "🌵 Cocok untuk tanaman kaktus atau lidah buaya (tanah kering)";
-  } else if (soilMoisture >= 300 && soilMoisture < 600) {
-    rekomendasi = "🌱 Cocok untuk sayuran daun seperti bayam atau selada (tanah lembap sedang)";
-  } else if (soilMoisture >= 600) {
-    rekomendasi = "💧 Cocok untuk tanaman air seperti kangkung atau genjer (tanah sangat basah)";
+  if (nilaiTanah < 300) {
+    saran = "🌵 Cocok untuk kaktus atau sukulen (tanah kering)";
+  } else if (nilaiTanah >= 300 && nilaiTanah < 600) {
+    saran = "🌱 Cocok untuk sayuran daun seperti bayam, selada (tanah sedang)";
+  } else {
+    saran = "💧 Cocok untuk tanaman air seperti kangkung atau talas (tanah basah)";
   }
 
-  document.getElementById("plant-recommendation").textContent = rekomendasi;
+  document.getElementById("plant-recommendation").textContent = saran;
 }
 
-// Dark/Light mode toggle
+// Mode gelap/terang
 document.getElementById("mode-toggle").addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
 });
 
-// Auto update tiap 20 detik
+// Ambil data setiap 20 detik
 fetchData();
 setInterval(fetchData, 20000);
