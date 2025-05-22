@@ -3,23 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pemantauan Tanaman Otomatis</title>
+  <title>Monitor Tanaman Otomatis</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Sistem Pemantau Tanaman Otomatis</h1>
+    <h1>🌿 Monitor Tanaman Otomatis</h1>
 
     <div class="data-box">
-      <p><strong>Suhu:</strong> <span id="temperature">--</span> °C</p>
-      <p><strong>Kelembapan Udara:</strong> <span id="humidity">--</span> %</p>
-      <p><strong>Kelembapan Tanah:</strong> <span id="soil">--</span></p>
+      <p>🌡️ Suhu: <span id="temperature">--</span> °C</p>
+      <p>💧 Kelembapan Udara: <span id="humidity">--</span> %</p>
+      <p>🪴 Kelembapan Tanah: <span id="soil">--</span></p>
     </div>
 
-    <div class="recommendation">
-      <h2>Rekomendasi Tanaman:</h2>
-      <p id="plant-recommendation">Menunggu data...</p>
+    <div class="recommendation" id="recommendation">
+      🔍 Rekomendasi tanaman akan tampil di sini...
     </div>
+
+    <iframe 
+      width="100%" height="300" 
+      src="https://thingspeak.com/channels/2970299/charts/1?bgcolor=%23ffffff&color=%2300aaff&dynamic=true" 
+      frameborder="0">
+    </iframe>
+
+    <button onclick="toggleDarkMode()">🌙/☀️ Mode</button>
   </div>
 
   <script src="script.js"></script>
