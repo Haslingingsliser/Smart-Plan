@@ -1,73 +1,58 @@
 body {
   font-family: "Segoe UI", sans-serif;
-  background-color: #f5f8fb;
-  color: #333;
   margin: 0;
   padding: 0;
+  background-image: url("images/BGPLANT.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #333;
 }
 
 .container {
-  max-width: 600px;
-  margin: 30px auto;
-  padding: 25px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.9);
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.logo {
+  width: 60px;
+  margin-right: 1rem;
 }
 
 h1 {
-  text-align: center;
+  font-size: 1.8rem;
+  margin: 0;
   color: #2e7d32;
 }
 
-.sensor-info p {
-  margin: 8px 0;
-  font-size: 16px;
+.data-display p {
+  font-size: 1.2rem;
+  margin: 0.4rem 0;
   text-align: left;
 }
 
-.recommendation {
-  margin-top: 20px;
-  padding: 15px;
+.rekomendasi-box {
   background-color: #e8f5e9;
-  border-left: 5px solid #4caf50;
-  text-align: left;
+  border-left: 5px solid #388e3c;
+  padding: 1rem;
+  margin-top: 1rem;
 }
 
-.recommendation p {
-  margin: 4px 0;
+#rekomendasi {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
 }
 
 #chart-container {
-  margin-top: 30px;
-}
-
-button#mode-toggle {
-  margin-top: 20px;
-  padding: 10px 15px;
-  font-size: 14px;
-  border: none;
-  border-radius: 5px;
-  background-color: #69f0ae;
-  color: #333;
-  cursor: pointer;
-  display: block;
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.dark-mode {
-  background-color: #2e2e2e;
-  color: #fff;
-}
-
-.dark-mode .container {
-  background-color: #424242;
-  color: #fff;
-}
-
-.dark-mode .recommendation {
-  background-color: #33691e;
-  border-left-color: #aed581;
+  margin-top: 2rem;
 }
