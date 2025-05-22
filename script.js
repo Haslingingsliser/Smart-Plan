@@ -1,44 +1,47 @@
-const channelID = 2970299;
-const url = `https://api.thingspeak.com/channels/${channelID}/feeds/last.json`;
+const apiKey = 'L8C7WH7SG2W6BK1K';
+const channelId = '2970299';
 
 async function fetchData() {
   try {
-    const response = await fetch(url);
+    const response = await fetch(
+      `https://api.thingspeak.com/channels/${channelId}/feeds.json?results=1&api_key=${apiKey}`
+    );
     const data = await response.json();
+    const feed = data.feeds[0];
 
-    const suhu = parseFloat(data.field1);
-    const kelembapanUdara = parseFloat(data.field2);
-    const kelembapanTanah = parseInt(data.field3);
+    const temperature = parseFloat(feed.field1);
+    const humidity = parseFloat(feed.field2);
+    const soilMoisture = parseFloat(feed.field3);
 
-    document.getElementById("temperature").textContent = suhu.toFixed(1);
-    document.getElementById("humidity").textContent = kelembapanUdara.toFixed(1);
-    document.getElementById("soil").textContent = kelembapanTanah;
+    document.getElementById('temperature').textContent = isNaN(temperature) ? '--' : temperature.toFixed(1);
+    document.getElementById('humidity').textContent = isNaN(humidity) ? '--' : humidity.toFixed(1);
+    document.getElementById('soil').textContent = isNaN(soilMoisture) ? '--' : soilMoisture.toFixed(1);
 
-    tampilkanRekomendasi(kelembapanTanah);
-  } catch (err) {
-    console.error("Gagal mengambil data dari ThingSpeak:", err);
+    tampilkanRekomendasi(soilMoisture);
+  } catch (error) {
+    console.error('Gagal mengambil data:', error);
   }
 }
 
-function tampilkanRekomendasi(nilaiTanah) {
-  let saran = "Tidak tersedia";
+function tampilkanRekomendasi(soil) {
+  const rekomendasiEl = document.getElementById('plant-recommendation');
+  if (isNaN(soil)) {
+    rekomendasiEl.textContent = 'Data belum tersedia.';
+    return;
+  }
 
-  if (nilaiTanah < 300) {
-    saran = "🌵 Cocok untuk kaktus atau sukulen (tanah kering)";
-  } else if (nilaiTanah >= 300 && nilaiTanah < 600) {
-    saran = "🌱 Cocok untuk sayuran daun seperti bayam, selada (tanah sedang)";
+  if (soil < 30) {
+    rekomendasiEl.textContent = '🌵 Cocok untuk tanaman kering seperti lidah mertua atau kaktus.';
+  } else if (soil < 70) {
+    rekomendasiEl.textContent = '🌱 Cocok untuk tanaman umum seperti bayam, cabai, atau tomat.';
   } else {
-    saran = "💧 Cocok untuk tanaman air seperti kangkung atau talas (tanah basah)";
+    rekomendasiEl.textContent = '💧 Cocok untuk tanaman air seperti kangkung atau talas (tanah basah).';
   }
-
-  document.getElementById("plant-recommendation").textContent = saran;
 }
 
-// Mode gelap/terang
-document.getElementById("mode-toggle").addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
+document.getElementById('mode-toggle').addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
 });
 
-// Ambil data setiap 20 detik
 fetchData();
-setInterval(fetchData, 20000);
+setInterval(fetchData, 15000); // refresh data setiap 15 detik
