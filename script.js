@@ -31,7 +31,7 @@ function tampilkanRekomendasi(soil) {
   }
 
   if (soil < 30) {
-    rekomendasiEl.textContent = '🌵 Cocok untuk tanaman kering seperti lidah mertua atau kaktus.';
+    rekomendasiEl.textContent = '🌵 Cocok untuk tanaman kering seperti lidah buaya atau kaktus.';
   } else if (soil < 70) {
     rekomendasiEl.textContent = '🌱 Cocok untuk tanaman umum seperti bayam, cabai, atau tomat.';
   } else {
