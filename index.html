@@ -1,40 +1,35 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Monitor Tanaman Otomatis</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <h1>🌿 Monitor Tanaman Otomatis</h1>
-    <p>🌡️ Suhu: <span id="temperature">--</span> °C</p>
-    <p>💧 Kelembapan Udara: <span id="humidity">--</span> %</p>
-    <p>🪴 Kelembapan Tanah: <span id="soil">--</span></p>
 
-    <div class="recommendation">
-      🔍 <strong>Rekomendasi tanaman:</strong>
-      <p id="plant-recommendation">--</p>
+    <div class="sensor-info">
+      <p>🌡️ Suhu: <span id="temperature">--</span> °C</p>
+      <p>💧 Kelembapan Udara: <span id="humidity">--</span> %</p>
+      <p>🪴 Kelembapan Tanah: <span id="soil">--</span></p>
     </div>
 
-    <iframe
-      width="100%" height="260"
-      style="border: 1px solid #ccc; margin-top: 20px;"
-      src="https://thingspeak.com/channels/2970299/charts/1?bgcolor=%23ffffff&color=%2300aaff&dynamic=true&results=60&type=line&title=Suhu+%28%C2%B0C%29">
-    </iframe>
+    <div class="recommendation">
+      <p><strong>🔍 Rekomendasi tanaman:</strong></p>
+      <p id="plant-recommendation">Rekomendasi tanaman akan tampil di sini…</p>
+    </div>
 
-    <iframe
-      width="100%" height="260"
-      style="border: 1px solid #ccc; margin-top: 20px;"
-      src="https://thingspeak.com/channels/2970299/charts/2?bgcolor=%23ffffff&color=%2300c853&dynamic=true&results=60&type=line&title=Kelembapan+Udara+%28%25%29">
-    </iframe>
-
-    <iframe
-      width="100%" height="260"
-      style="border: 1px solid #ccc; margin-top: 20px;"
-      src="https://thingspeak.com/channels/2970299/charts/3?bgcolor=%23ffffff&color=%23ff7043&dynamic=true&results=60&type=line&title=Kelembapan+Tanah">
-    </iframe>
+    <div id="chart-container">
+      <h3>📊 Grafik Suhu</h3>
+      <iframe
+        width="100%"
+        height="260"
+        style="border: none"
+        src="https://thingspeak.com/channels/2970299/charts/1?bgcolor=%23ffffff&color=%2300aaff&dynamic=true&type=line"
+      ></iframe>
+    </div>
 
     <button id="mode-toggle">🌙/☀️ Mode</button>
   </div>
