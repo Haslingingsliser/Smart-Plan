@@ -1,6 +1,6 @@
 body {
   font-family: "Segoe UI", sans-serif;
-  background-color: #f4f4f9;
+  background-color: #f5f8fb;
   color: #333;
   margin: 0;
   padding: 0;
@@ -9,47 +9,65 @@ body {
 .container {
   max-width: 600px;
   margin: 30px auto;
-  background: white;
-  padding: 20px 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  padding: 25px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #2c3e50;
+  text-align: center;
+  color: #2e7d32;
+}
+
+.sensor-info p {
+  margin: 8px 0;
+  font-size: 16px;
+  text-align: left;
 }
 
 .recommendation {
-  background: #e8f5e9;
-  border-left: 6px solid #4caf50;
-  padding: 10px;
-  margin: 20px 0;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #e8f5e9;
+  border-left: 5px solid #4caf50;
+  text-align: left;
+}
+
+.recommendation p {
+  margin: 4px 0;
+}
+
+#chart-container {
+  margin-top: 30px;
 }
 
 button#mode-toggle {
-  background: #4caf50;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 6px;
-  cursor: pointer;
   margin-top: 20px;
+  padding: 10px 15px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  background-color: #69f0ae;
+  color: #333;
+  cursor: pointer;
+  display: block;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* Dark Mode */
 .dark-mode {
-  background-color: #121212;
-  color: #e0e0e0;
+  background-color: #2e2e2e;
+  color: #fff;
 }
 
 .dark-mode .container {
-  background: #1e1e1e;
+  background-color: #424242;
+  color: #fff;
 }
 
 .dark-mode .recommendation {
-  background: #2e7d32;
-  border-left: 6px solid #81c784;
+  background-color: #33691e;
+  border-left-color: #aed581;
 }
