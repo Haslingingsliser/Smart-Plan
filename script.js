@@ -1,47 +1,31 @@
+const channelID = 2970299;
 const apiKey = 'L8C7WH7SG2W6BK1K';
-const channelId = '2970299';
+const url = `https://api.thingspeak.com/channels/${channelID}/feeds/last.json?api_key=${apiKey}`;
 
-async function fetchData() {
-  try {
-    const response = await fetch(
-      `https://api.thingspeak.com/channels/${channelId}/feeds.json?results=1&api_key=${apiKey}`
-    );
-    const data = await response.json();
-    const feed = data.feeds[0];
+function fetchData() {
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('suhu').textContent = data.field1 || '--';
+      document.getElementById('kelembapan').textContent = data.field2 || '--';
+      document.getElementById('tanah').textContent = data.field3 || '--';
 
-    const temperature = parseFloat(feed.field1);
-    const humidity = parseFloat(feed.field2);
-    const soilMoisture = parseFloat(feed.field3);
-
-    document.getElementById('temperature').textContent = isNaN(temperature) ? '--' : temperature.toFixed(1);
-    document.getElementById('humidity').textContent = isNaN(humidity) ? '--' : humidity.toFixed(1);
-    document.getElementById('soil').textContent = isNaN(soilMoisture) ? '--' : soilMoisture.toFixed(1);
-
-    tampilkanRekomendasi(soilMoisture);
-  } catch (error) {
-    console.error('Gagal mengambil data:', error);
-  }
+      // Rekomendasi berdasarkan nilai kelembapan tanah (contoh sederhana)
+      const kelembapanTanah = parseInt(data.field3);
+      const rekom = document.getElementById('rekomendasi');
+      if (kelembapanTanah < 1000) {
+        rekom.textContent = "Tanah sangat kering, cocok untuk kaktus atau sukulen.";
+      } else if (kelembapanTanah < 2500) {
+        rekom.textContent = "Tanah cukup lembap, cocok untuk tanaman sayur.";
+      } else {
+        rekom.textContent = "Tanah sangat lembap, cocok untuk tanaman air atau padi.";
+      }
+    })
+    .catch(error => {
+      console.error("Gagal mengambil data dari ThingSpeak:", error);
+    });
 }
 
-function tampilkanRekomendasi(soil) {
-  const rekomendasiEl = document.getElementById('plant-recommendation');
-  if (isNaN(soil)) {
-    rekomendasiEl.textContent = 'Data belum tersedia.';
-    return;
-  }
-
-  if (soil < 30) {
-    rekomendasiEl.textContent = '🌵 Cocok untuk tanaman kering seperti lidah buaya atau kaktus.';
-  } else if (soil < 70) {
-    rekomendasiEl.textContent = '🌱 Cocok untuk tanaman umum seperti bayam, cabai, atau tomat.';
-  } else {
-    rekomendasiEl.textContent = '💧 Cocok untuk tanaman air seperti kangkung atau talas (tanah basah).';
-  }
-}
-
-document.getElementById('mode-toggle').addEventListener('click', () => {
-  document.body.classList.toggle('dark-mode');
-});
-
+// Ambil data setiap 15 detik
 fetchData();
-setInterval(fetchData, 15000); // refresh data setiap 15 detik
+setInterval(fetchData, 15000);
