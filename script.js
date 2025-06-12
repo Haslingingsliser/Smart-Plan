@@ -1,17 +1,12 @@
-const channelID = 2970299;
-const apiKey = 'L8C7WH7SG2W6BK1K';
-const url = `https://api.thingspeak.com/channels/${channelID}/feeds/last.json?api_key=${apiKey}`;
-
 function fetchData() {
-  fetch(url)
+  fetch("data.json")
     .then(response => response.json())
     .then(data => {
-      document.getElementById('suhu').textContent = data.field1 || '--';
-      document.getElementById('kelembapan').textContent = data.field2 || '--';
-      document.getElementById('tanah').textContent = data.field3 || '--';
+      document.getElementById('suhu').textContent = data.suhu || '--';
+      document.getElementById('kelembapan').textContent = data.kelembapan || '--';
+      document.getElementById('tanah').textContent = data.tanah || '--';
 
-      // Rekomendasi berdasarkan nilai kelembapan tanah (contoh sederhana)
-      const kelembapanTanah = parseInt(data.field3);
+      const kelembapanTanah = parseInt(data.tanah);
       const rekom = document.getElementById('rekomendasi');
       if (kelembapanTanah < 1000) {
         rekom.textContent = "Tanah sangat kering, cocok untuk kaktus atau sukulen.";
@@ -22,10 +17,9 @@ function fetchData() {
       }
     })
     .catch(error => {
-      console.error("Gagal mengambil data dari ThingSpeak:", error);
+      console.error("Gagal mengambil data:", error);
     });
 }
 
-// Ambil data setiap 15 detik
 fetchData();
-setInterval(fetchData, 15000);
+setInterval(fetchData, 15000); // refresh tiap 15 detik
