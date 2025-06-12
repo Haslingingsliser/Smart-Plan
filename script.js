@@ -5,18 +5,18 @@ async function fetchAndDisplay() {
   const suhuData = data.map(d => parseFloat(d.suhu) || null);
   const humData = data.map(d => parseFloat(d.kelembapan) || null);
   const tanahData = data.map(d => parseFloat(d.tanah) || null);
-  const labels = data.map(d => d.timestamp.split(" ")[1]); // ambil jam
+  const labels = data.map(d => d.timestamp.split(" ")[1]);
 
-  // Tampilkan data terakhir
   const latest = data[data.length - 1] || {};
   document.getElementById('suhu').textContent = latest.suhu || '--';
   document.getElementById('kelembapan').textContent = latest.kelembapan || '--';
   document.getElementById('tanah').textContent = latest.tanah || '--';
 
-  // Rekomendasi
   const kelembapanTanah = parseInt(latest.tanah);
   const rekom = document.getElementById('rekomendasi');
-  if (kelembapanTanah < 1000) {
+  if (!kelembapanTanah) {
+    rekom.textContent = "⚠️ Data tidak terbaca. Periksa koneksi sensor.";
+  } else if (kelembapanTanah < 1000) {
     rekom.textContent = "Tanah sangat kering, cocok untuk kaktus atau sukulen.";
   } else if (kelembapanTanah < 2500) {
     rekom.textContent = "Tanah cukup lembap, cocok untuk tanaman sayur.";
@@ -24,21 +24,23 @@ async function fetchAndDisplay() {
     rekom.textContent = "Tanah sangat lembap, cocok untuk tanaman air atau padi.";
   }
 
-  // Gambar grafik
-  createChart('suhuChart', labels, suhuData, 'Suhu (°C)', 'rgba(255, 99, 132, 0.6)');
-  createChart('humChart', labels, humData, 'Kelembapan Udara (%)', 'rgba(54, 162, 235, 0.6)');
-  createChart('tanahChart', labels, tanahData, 'Kelembapan Tanah', 'rgba(255, 206, 86, 0.6)');
+  drawChart('suhuChart', labels, suhuData, 'Suhu (°C)', 'rgba(255, 99, 132, 0.6)');
+  drawChart('humChart', labels, humData, 'Kelembapan Udara (%)', 'rgba(54, 162, 235, 0.6)');
+  drawChart('tanahChart', labels, tanahData, 'Kelembapan Tanah', 'rgba(255, 206, 86, 0.6)');
 }
 
-function createChart(canvasId, labels, data, label, color) {
-  const ctx = document.getElementById(canvasId).getContext('2d');
-  new Chart(ctx, {
+let charts = {};
+function drawChart(id, labels, data, label, color) {
+  if (charts[id]) charts[id].destroy();
+
+  const ctx = document.getElementById(id).getContext('2d');
+  charts[id] = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: labels,
+      labels,
       datasets: [{
-        label: label,
-        data: data,
+        label,
+        data,
         borderColor: color,
         backgroundColor: color,
         fill: false,
