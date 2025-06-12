@@ -16,9 +16,8 @@ if (file_exists($dataFile)) {
   $data = [];
 }
 
-$data[] = $newData; // Tambah data baru
+$data[] = $newData;
 
-// Simpan hanya 20 data terakhir
 if (count($data) > 20) {
   $data = array_slice($data, -20);
 }
