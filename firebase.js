@@ -1,4 +1,3 @@
-// firebase.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
@@ -17,5 +16,5 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 window.realtimeDB = db;
-window.onValue = onValue;
 window.ref = ref;
+window.onValue = onValue;
