@@ -19,4 +19,4 @@ Website ini menampilkan data sensor dari ESP32 yang dikirim secara real-time ke 
 
 ---
 
-Made with ❤️ by Haidar
+Made by Abdurrahman Haidar Azfa (1227070003) - S1 Teknik Elektro (Teknik Kendali dan Komputasi)
