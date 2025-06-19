@@ -1,4 +1,4 @@
-const channelID = "2515806";
+const channelID = "2970299";
 
 function getPlantRecommendation(temp, humidity, soil) {
   if (temp >= 26 && temp <= 32 && humidity >= 60 && soil < 1000) {
@@ -29,34 +29,34 @@ function getPlantRecommendation(temp, humidity, soil) {
 }
 
 function fetchLatestData() {
-  document.getElementById("temp").textContent = "--";
-  document.getElementById("hum").textContent = "--";
-  document.getElementById("soil").textContent = "--";
+  fetch(`https://api.thingspeak.com/channels/${channelID}/feeds.json?results=1`)
+    .then(res => res.json())
+    .then(data => {
+      const latest = data.feeds[0];
+      const suhu = parseFloat(latest.field1);
+      const kelembapan = parseFloat(latest.field2);
+      const tanah = parseInt(latest.field3);
 
-  Promise.all([
-    fetch(`https://api.thingspeak.com/channels/${channelID}/fields/1.json?results=1`).then(r => r.json()),
-    fetch(`https://api.thingspeak.com/channels/${channelID}/fields/2.json?results=1`).then(r => r.json()),
-    fetch(`https://api.thingspeak.com/channels/${channelID}/fields/3.json?results=1`).then(r => r.json())
-  ])
-  .then(([tempRes, humRes, soilRes]) => {
-    const suhu = Number(tempRes.feeds[0].field1);
-    const kelembapan = Number(humRes.feeds[0].field2);
-    const tanah = Number(soilRes.feeds[0].field3);
+      document.getElementById("temp").textContent = isNaN(suhu) ? "--" : suhu.toFixed(1);
+      document.getElementById("hum").textContent = isNaN(kelembapan) ? "--" : kelembapan.toFixed(1);
+      document.getElementById("soil").textContent = isNaN(tanah) ? "--" : tanah;
 
-    document.getElementById("temp").textContent = suhu.toFixed(1);
-    document.getElementById("hum").textContent = kelembapan.toFixed(1);
-    document.getElementById("soil").textContent = tanah;
+      if (!isNaN(suhu) && !isNaN(kelembapan) && !isNaN(tanah)) {
+        const rec = getPlantRecommendation(suhu, kelembapan, tanah);
+        document.getElementById("plantName").textContent = rec.name;
+        document.getElementById("plantingGuide").textContent = rec.planting;
+        document.getElementById("careGuide").textContent = rec.care;
+      } else {
+        document.getElementById("plantName").textContent = "Data belum tersedia";
+        document.getElementById("plantingGuide").textContent = "-";
+        document.getElementById("careGuide").textContent = "-";
+      }
 
-    const rec = getPlantRecommendation(suhu, kelembapan, tanah);
-    document.getElementById("plantName").textContent = rec.name;
-    document.getElementById("plantingGuide").textContent = rec.planting;
-    document.getElementById("careGuide").textContent = rec.care;
-
-    console.log("Data terbaru → Suhu:", suhu, "°C | Kelembapan:", kelembapan, "% | Tanah:", tanah);
-  })
-  .catch(err => {
-    console.error("Gagal mengambil data dari ThingSpeak:", err);
-  });
+      console.log("Suhu:", suhu, "| Kelembapan:", kelembapan, "| Tanah:", tanah);
+    })
+    .catch(err => {
+      console.error("Gagal mengambil data dari ThingSpeak:", err);
+    });
 }
 
 fetchLatestData();
