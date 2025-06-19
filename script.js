@@ -29,11 +29,16 @@ function getPlantRecommendation(temp, humidity, soil) {
 }
 
 function fetchLatestData() {
+  document.getElementById("temp").textContent = "--";
+  document.getElementById("hum").textContent = "--";
+  document.getElementById("soil").textContent = "--";
+
   Promise.all([
     fetch(`https://api.thingspeak.com/channels/${channelID}/fields/1.json?results=1`).then(r => r.json()),
     fetch(`https://api.thingspeak.com/channels/${channelID}/fields/2.json?results=1`).then(r => r.json()),
     fetch(`https://api.thingspeak.com/channels/${channelID}/fields/3.json?results=1`).then(r => r.json())
-  ]).then(([tempRes, humRes, soilRes]) => {
+  ])
+  .then(([tempRes, humRes, soilRes]) => {
     const suhu = Number(tempRes.feeds[0].field1);
     const kelembapan = Number(humRes.feeds[0].field2);
     const tanah = Number(soilRes.feeds[0].field3);
@@ -46,8 +51,11 @@ function fetchLatestData() {
     document.getElementById("plantName").textContent = rec.name;
     document.getElementById("plantingGuide").textContent = rec.planting;
     document.getElementById("careGuide").textContent = rec.care;
-  }).catch(err => {
-    console.error("Gagal mengambil data:", err);
+
+    console.log("Data terbaru → Suhu:", suhu, "°C | Kelembapan:", kelembapan, "% | Tanah:", tanah);
+  })
+  .catch(err => {
+    console.error("Gagal mengambil data dari ThingSpeak:", err);
   });
 }
 
