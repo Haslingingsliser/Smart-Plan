@@ -5,35 +5,28 @@ const firebaseConfig = {
   databaseURL: "https://iot-haidar-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-// Ambil data real-time
-onValue(ref(db, 'sensor'), (snapshot) => {
-  const data = snapshot.val();
+// Debug 1: Cek inisialisasi Firebase
+try {
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  console.log("Firebase initialized successfully");
   
-  // Update UI (sesuai ID yang sudah ada)
-  document.getElementById('suhu').textContent = data.suhu.toFixed(1);
-  document.getElementById('kelembapan').textContent = data.kelembapan.toFixed(1);
-  document.getElementById('tanah').textContent = data.tanah;
+  // Debug 2: Cek koneksi ke path 'sensor'
+  onValue(ref(db, 'sensor'), (snapshot) => {
+    const data = snapshot.val();
+    console.log("Data received:", data); // Harus muncul di browser console
+    
+    if (!data) {
+      console.error("Data is empty");
+      return;
+    }
 
-  // Update grafik (pastikan Chart.js sudah terload)
-  updateChart('suhuChart', data.suhu);
-  updateChart('humChart', data.kelembapan);
-  updateChart('tanahChart', data.tanah);
-});
+    // Debug 3: Cek update DOM
+    document.getElementById('tanah').textContent = data.tanah || "N/A";
+    console.log("DOM updated");
+    
+  }, { onlyOnce: false });
 
-// Fungsi update grafik
-function updateChart(chartId, value) {
-  const chart = window.myCharts[chartId];
-  chart.data.labels.push(new Date().toLocaleTimeString());
-  chart.data.datasets[0].data.push(value);
-  
-  // Batasi data grafik
-  if (chart.data.labels.length > 15) {
-    chart.data.labels.shift();
-    chart.data.datasets[0].data.shift();
-  }
-  
-  chart.update();
+} catch (error) {
+  console.error("Firebase error:", error);
 }
