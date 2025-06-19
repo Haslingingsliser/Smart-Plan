@@ -1,31 +1,35 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project IoT</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="images/pngegg.png" type="image/png" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project IoT - Monitoring Tanaman</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="images/pngegg.png" type="image/png">
+  <!-- Load Chart.js untuk grafik -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container">
     <header>
-      <img src="images/pngegg.png" alt="Logo Tanaman" class="logo" />
+      <img src="images/pngegg.png" alt="Logo Tanaman" class="logo">
       <h1>Project IoT - Sistem Pakar Mengenai Tanaman</h1>
     </header>
 
+    <!-- Tampilan Data Sensor -->
     <div class="data-display">
       <p>🌡️ Suhu: <span id="suhu">--</span> °C</p>
       <p>💧 Kelembapan Udara: <span id="kelembapan">--</span> %</p>
       <p>🪴 Kelembapan Tanah: <span id="tanah">--</span></p>
     </div>
 
+    <!-- Rekomendasi Tanaman -->
     <div class="rekomendasi-box">
       <p>🔍 <strong>Rekomendasi tanaman:</strong></p>
-      <p id="rekomendasi">Rekomendasi tanaman akan tampil di sini…</p>
+      <p id="rekomendasi">Rekomendasi tanaman akan tampil di sini...</p>
     </div>
 
+    <!-- Container Grafik -->
     <div id="chart-container">
       <h3>📊 Grafik Suhu</h3>
       <canvas id="suhuChart" height="200"></canvas>
@@ -38,7 +42,111 @@
     </div>
   </div>
 
-  <script type="module" src="firebase.js"></script>
-  <script src="script.js"></script>
+  <!-- Firebase dan Chart Configuration -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    // Konfigurasi Firebase
+    const firebaseConfig = {
+      databaseURL: "https://iot-haidar-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+
+    // Inisialisasi Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Inisialisasi Grafik
+    const suhuChart = new Chart(
+      document.getElementById('suhuChart'),
+      {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Suhu (°C)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            data: []
+          }]
+        }
+      }
+    );
+
+    const humChart = new Chart(
+      document.getElementById('humChart'),
+      {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Kelembapan Udara (%)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            data: []
+          }]
+        }
+      }
+    );
+
+    const tanahChart = new Chart(
+      document.getElementById('tanahChart'),
+      {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Kelembapan Tanah',
+            borderColor: 'rgba(255, 206, 86, 1)',
+            data: []
+          }]
+        }
+      }
+    );
+
+    // Fungsi Update Grafik
+    function updateChart(chart, newValue) {
+      const now = new Date();
+      const time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+      
+      chart.data.labels.push(time);
+      chart.data.datasets[0].data.push(newValue);
+      
+      // Batasi data grafik (15 titik terakhir)
+      if (chart.data.labels.length > 15) {
+        chart.data.labels.shift();
+        chart.data.datasets[0].data.shift();
+      }
+      
+      chart.update();
+    }
+
+    // Baca Data Real-time dari Firebase
+    onValue(ref(db, 'sensor'), (snapshot) => {
+      const data = snapshot.val();
+      
+      // Update Nilai Sensor
+      document.getElementById('suhu').textContent = data.suhu.toFixed(1);
+      document.getElementById('kelembapan').textContent = data.kelembapan.toFixed(1);
+      document.getElementById('tanah').textContent = data.tanah;
+
+      // Update Grafik
+      updateChart(suhuChart, data.suhu);
+      updateChart(humChart, data.kelembapan);
+      updateChart(tanahChart, data.tanah);
+
+      // Logika Rekomendasi Tanaman (Sesuai Kode Anda)
+      const tanah = parseInt(data.tanah);
+      const rekom = document.getElementById('rekomendasi');
+      
+      if (!tanah) {
+        rekom.textContent = "⚠️ Data tidak terbaca. Periksa koneksi sensor.";
+      } else if (tanah < 1000) {
+        rekom.textContent = "Tanah sangat kering, cocok untuk kaktus atau sukulen.";
+      } else if (tanah < 2500) {
+        rekom.textContent = "Tanah cukup lembap, cocok untuk tanaman sayur.";
+      } else {
+        rekom.textContent = "Tanah sangat lembap, cocok untuk tanaman air atau padi.";
+      }
+    });
+  </script>
 </body>
 </html>
