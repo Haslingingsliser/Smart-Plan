@@ -89,7 +89,7 @@ const sensorChart = new Chart(ctx, {
 });
 
 function updateChartData() {
-  fetch("http://192.168.43.107/monitor_tanaman/data.php?history=true")
+  fetch("http://IP/monitor_tanaman/data.php?history=true")
     .then(res => res.json())
     .then(data => {
       const labels = data.map(entry => new Date(entry.waktu).toLocaleTimeString());
