@@ -46,18 +46,83 @@ function fetchLatestData() {
         document.getElementById("plantName").textContent = rec.name;
         document.getElementById("plantingGuide").textContent = rec.planting;
         document.getElementById("careGuide").textContent = rec.care;
-      } else {
-        document.getElementById("plantName").textContent = "Data belum tersedia";
-        document.getElementById("plantingGuide").textContent = "-";
-        document.getElementById("careGuide").textContent = "-";
       }
-
-      console.log("📡 Update:", suhu, kelembapan, tanah);
     })
     .catch(err => {
-      console.error("⚠️ Gagal ambil data dari ThingSpeak:", err);
+      console.error("Gagal mengambil data:", err);
     });
 }
 
 fetchLatestData();
 setInterval(fetchLatestData, 5000);
+
+// Grafik Sensor
+const ctx = document.getElementById("sensorChart").getContext("2d");
+const sensorChart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: [],
+    datasets: [
+      {
+        label: "Suhu 🌡️ (°C)",
+        data: [],
+        borderColor: "orange",
+        backgroundColor: "rgba(255,165,0,0.2)",
+        fill: true,
+        tension: 0.3
+      },
+      {
+        label: "Kelembapan 💧 (%)",
+        data: [],
+        borderColor: "deepskyblue",
+        backgroundColor: "rgba(0,191,255,0.2)",
+        fill: true,
+        tension: 0.3
+      },
+      {
+        label: "Tanah 🌾 (ADC)",
+        data: [],
+        borderColor: "limegreen",
+        backgroundColor: "rgba(50,205,50,0.2)",
+        fill: true,
+        tension: 0.3
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Waktu"
+        }
+      },
+      y: {
+        beginAtZero: false
+      }
+    }
+  }
+});
+
+function updateChartData() {
+  fetch(`https://api.thingspeak.com/channels/${channelID}/feeds.json?results=10`)
+    .then(res => res.json())
+    .then(data => {
+      const feeds = data.feeds;
+      const labels = feeds.map(feed => new Date(feed.created_at).toLocaleTimeString());
+      const suhu = feeds.map(feed => parseFloat(feed.field1));
+      const kelembapan = feeds.map(feed => parseFloat(feed.field2));
+      const tanah = feeds.map(feed => parseFloat(feed.field3));
+
+      sensorChart.data.labels = labels;
+      sensorChart.data.datasets[0].data = suhu;
+      sensorChart.data.datasets[1].data = kelembapan;
+      sensorChart.data.datasets[2].data = tanah;
+
+      sensorChart.update();
+    });
+}
+
+updateChartData();
+setInterval(updateChartData, 10000);
