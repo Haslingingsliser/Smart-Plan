@@ -17,7 +17,7 @@ body {
   padding: 2rem;
   border-radius: 20px;
   width: 90%;
-  max-width: 600px;
+  max-width: 700px;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
 }
 
@@ -44,4 +44,20 @@ span {
   margin-top: 1rem;
   font-size: 1.3rem;
   color: #b2ff59;
+}
+
+.chart-section {
+  margin-top: 2rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: left;
+}
+
+canvas {
+  width: 100% !important;
+  max-width: 100%;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-top: 1rem;
 }
