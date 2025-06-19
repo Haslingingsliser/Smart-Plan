@@ -1,43 +1,44 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background-image: url('images/BGPLANT.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: linear-gradient(to right, #4CAF50, #2E7D32);
   color: #fff;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .container {
-  background-color: rgba(0, 0, 0, 0.6);
-  max-width: 700px;
-  margin: 50px auto;
+  background-color: rgba(0, 0, 0, 0.7);
   padding: 2rem;
-  border-radius: 15px;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
 }
 
-.logo {
-  width: 40px;
-  vertical-align: middle;
-  margin-right: 10px;
-}
-
-.data {
-  margin: 20px 0;
-  font-size: 1.2rem;
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #a5d6a7;
   text-align: left;
 }
 
-.info {
-  margin-top: 30px;
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 1rem;
-  border-radius: 10px;
+.data, .info {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
   text-align: left;
+  line-height: 1.6;
+}
+
+span {
+  color: #ffee58;
+  font-weight: bold;
 }
 
 .info h2 {
-  text-align: left;
-  margin-bottom: 1rem;
+  margin-top: 1rem;
+  font-size: 1.3rem;
+  color: #b2ff59;
 }
