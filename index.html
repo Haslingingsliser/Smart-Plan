@@ -6,18 +6,24 @@
   <title>Monitor Tanaman</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="images/pngegg.png" type="image/png" />
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>
-      <img src="images/pngegg.png" alt="Logo" class="logo" />
-      Monitor Kelembapan Tanah
-    </h1>
+    <h1><img src="images/pngegg.png" alt="Logo" class="logo" />Monitor Tanaman</h1>
+
+    <h2>Suhu Tanaman (°C)</h2>
+    <canvas id="tempChart"></canvas>
+
+    <h2>Kelembapan Udara (%)</h2>
+    <canvas id="humChart"></canvas>
+
+    <h2>Kelembapan Tanah (ADC)</h2>
     <canvas id="soilChart"></canvas>
+
     <p><strong>Rekomendasi Tanaman:</strong> <span id="recommendation">Memuat...</span></p>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
