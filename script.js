@@ -13,21 +13,30 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const sensorRef = ref(db, 'sensor_data');
 
-onValue(sensorRef, (snapshot) => {
+// Tetap menggunakan UI yang sudah ada
+onValue(ref(db, 'sensor'), (snapshot) => {
   const data = snapshot.val();
-  if (!data) {
-    document.getElementById('tanah').textContent = "No data";
-    return;
-  }
+  if (!data) return;
 
-  // Get most recent entry
-  const entries = Object.values(data);
-  const latest = entries[entries.length - 1];
+  // Ambil data terakhir
+  const lastKey = Object.keys(data).pop();
+  const lastData = data[lastKey];
+
+  // Update UI yang sudah ada tanpa perubahan
+  document.getElementById('tanah').textContent = lastData.tanah;
   
-  // Update UI
-  document.getElementById('tanah').textContent = latest.soil_moisture + '%';
-  document.getElementById('tanah-raw').textContent = latest.soil_raw;
-  document.getElementById('timestamp').textContent = latest.timestamp;
+  // Untuk rekomendasi tanaman (sesuai logika Anda sebelumnya)
+  const kelembapanTanah = parseInt(lastData.tanah);
+  const rekom = document.getElementById('rekomendasi');
+  
+  if (!kelembapanTanah) {
+    rekom.textContent = "⚠️ Data tidak terbaca. Periksa koneksi sensor.";
+  } else if (kelembapanTanah < 1000) {
+    rekom.textContent = "Tanah sangat kering, cocok untuk kaktus atau sukulen.";
+  } else if (kelembapanTanah < 2500) {
+    rekom.textContent = "Tanah cukup lembap, cocok untuk tanaman sayur.";
+  } else {
+    rekom.textContent = "Tanah sangat lembap, cocok untuk tanaman air atau padi.";
+  }
 });
