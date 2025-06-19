@@ -1,5 +1,3 @@
-const channelID = "2970299";
-
 function getPlantRecommendation(temp, humidity, soil) {
   if (temp >= 26 && temp <= 32 && humidity >= 60 && soil < 1000) {
     return {
@@ -29,13 +27,12 @@ function getPlantRecommendation(temp, humidity, soil) {
 }
 
 function fetchLatestData() {
-  fetch(`https://api.thingspeak.com/channels/${channelID}/feeds.json?results=1`)
+  fetch("http://192.168.43.107/monitor_tanaman/data.php?latest=true")
     .then(res => res.json())
     .then(data => {
-      const latest = data.feeds[0];
-      const suhu = parseFloat(latest.field1);
-      const kelembapan = parseFloat(latest.field2);
-      const tanah = parseInt(latest.field3);
+      const suhu = parseFloat(data.suhu);
+      const kelembapan = parseFloat(data.kelembapan);
+      const tanah = parseInt(data.tanah);
 
       document.getElementById("temp").textContent = isNaN(suhu) ? "--" : suhu.toFixed(1);
       document.getElementById("hum").textContent = isNaN(kelembapan) ? "--" : kelembapan.toFixed(1);
@@ -47,16 +44,9 @@ function fetchLatestData() {
         document.getElementById("plantingGuide").textContent = rec.planting;
         document.getElementById("careGuide").textContent = rec.care;
       }
-    })
-    .catch(err => {
-      console.error("Gagal mengambil data:", err);
     });
 }
 
-fetchLatestData();
-setInterval(fetchLatestData, 5000);
-
-// Grafik Sensor
 const ctx = document.getElementById("sensorChart").getContext("2d");
 const sensorChart = new Chart(ctx, {
   type: "line",
@@ -64,7 +54,7 @@ const sensorChart = new Chart(ctx, {
     labels: [],
     datasets: [
       {
-        label: "Suhu 🌡️ (°C)",
+        label: "Suhu 🌡️",
         data: [],
         borderColor: "orange",
         backgroundColor: "rgba(255,165,0,0.2)",
@@ -72,7 +62,7 @@ const sensorChart = new Chart(ctx, {
         tension: 0.3
       },
       {
-        label: "Kelembapan 💧 (%)",
+        label: "Kelembapan 💧",
         data: [],
         borderColor: "deepskyblue",
         backgroundColor: "rgba(0,191,255,0.2)",
@@ -80,7 +70,7 @@ const sensorChart = new Chart(ctx, {
         tension: 0.3
       },
       {
-        label: "Tanah 🌾 (ADC)",
+        label: "Tanah 🌾",
         data: [],
         borderColor: "limegreen",
         backgroundColor: "rgba(50,205,50,0.2)",
@@ -92,37 +82,30 @@ const sensorChart = new Chart(ctx, {
   options: {
     responsive: true,
     scales: {
-      x: {
-        title: {
-          display: true,
-          text: "Waktu"
-        }
-      },
-      y: {
-        beginAtZero: false
-      }
+      x: { title: { display: true, text: "Waktu" }},
+      y: { beginAtZero: false }
     }
   }
 });
 
 function updateChartData() {
-  fetch(`https://api.thingspeak.com/channels/${channelID}/feeds.json?results=10`)
+  fetch("http://192.168.43.107/monitor_tanaman/data.php?history=true")
     .then(res => res.json())
     .then(data => {
-      const feeds = data.feeds;
-      const labels = feeds.map(feed => new Date(feed.created_at).toLocaleTimeString());
-      const suhu = feeds.map(feed => parseFloat(feed.field1));
-      const kelembapan = feeds.map(feed => parseFloat(feed.field2));
-      const tanah = feeds.map(feed => parseFloat(feed.field3));
+      const labels = data.map(entry => new Date(entry.waktu).toLocaleTimeString());
+      const suhu = data.map(entry => parseFloat(entry.suhu));
+      const kelembapan = data.map(entry => parseFloat(entry.kelembapan));
+      const tanah = data.map(entry => parseFloat(entry.tanah));
 
       sensorChart.data.labels = labels;
       sensorChart.data.datasets[0].data = suhu;
       sensorChart.data.datasets[1].data = kelembapan;
       sensorChart.data.datasets[2].data = tanah;
-
       sensorChart.update();
     });
 }
 
+fetchLatestData();
 updateChartData();
+setInterval(fetchLatestData, 5000);
 setInterval(updateChartData, 10000);
