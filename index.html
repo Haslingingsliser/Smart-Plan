@@ -6,22 +6,25 @@
   <title>Monitor Tanaman</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="images/pngegg.png" type="image/png" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container">
     <h1><img src="images/pngegg.png" alt="Logo" class="logo" />Monitor Tanaman</h1>
 
-    <h2>Suhu Tanaman (°C)</h2>
-    <canvas id="tempChart"></canvas>
+    <div class="data">
+      <p><strong>Suhu Tanaman:</strong> <span id="temp">--</span> °C</p>
+      <p><strong>Kelembapan Udara:</strong> <span id="hum">--</span> %</p>
+      <p><strong>Kelembapan Tanah:</strong> <span id="soil">--</span></p>
+    </div>
 
-    <h2>Kelembapan Udara (%)</h2>
-    <canvas id="humChart"></canvas>
-
-    <h2>Kelembapan Tanah (ADC)</h2>
-    <canvas id="soilChart"></canvas>
-
-    <p><strong>Rekomendasi Tanaman:</strong> <span id="recommendation">Memuat...</span></p>
+    <div class="info">
+      <h2>Tanaman yang Direkomendasikan</h2>
+      <p><strong>Nama Tanaman:</strong> <span id="plantName">Memuat...</span></p>
+      <p><strong>Cara Penanaman:</strong></p>
+      <p id="plantingGuide">-</p>
+      <p><strong>Perawatan:</strong></p>
+      <p id="careGuide">-</p>
+    </div>
   </div>
 
   <script src="script.js"></script>
