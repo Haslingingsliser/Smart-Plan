@@ -14,7 +14,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Tetap menggunakan UI yang sudah ada
+// Menggunakan ID element yang sudah ada di UI Anda
 onValue(ref(db, 'sensor'), (snapshot) => {
   const data = snapshot.val();
   if (!data) return;
@@ -23,10 +23,10 @@ onValue(ref(db, 'sensor'), (snapshot) => {
   const lastKey = Object.keys(data).pop();
   const lastData = data[lastKey];
 
-  // Update UI yang sudah ada tanpa perubahan
+  // Update UI yang sudah ada
   document.getElementById('tanah').textContent = lastData.tanah;
   
-  // Untuk rekomendasi tanaman (sesuai logika Anda sebelumnya)
+  // Logika rekomendasi tanaman (persis seperti sebelumnya)
   const kelembapanTanah = parseInt(lastData.tanah);
   const rekom = document.getElementById('rekomendasi');
   
