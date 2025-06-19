@@ -3,26 +3,26 @@ const channelID = "2970299";
 function getPlantRecommendation(temp, humidity, soil) {
   if (temp >= 26 && temp <= 32 && humidity >= 60 && soil < 1000) {
     return {
-      name: "Padi",
-      planting: "Padi ditanam di lahan basah yang tergenang air. Tabur benih di lahan semai, lalu pindahkan ke sawah setelah 21 hari.",
-      care: "Jaga irigasi agar tanah tetap tergenang, berikan pupuk urea dan pestisida sesuai tahap pertumbuhan."
+      name: "Padi 🌾",
+      planting: "Tanam di sawah basah, semai dulu selama 21 hari sebelum pindah tanam.",
+      care: "Pastikan air menggenang, beri pupuk urea, dan semprot pestisida bila perlu."
     };
   } else if (temp >= 24 && temp <= 30 && humidity >= 50 && soil >= 1000 && soil <= 2500) {
     return {
-      name: "Cabai",
-      planting: "Semai benih cabai di tray selama 10–14 hari, lalu pindahkan ke tanah gembur berdrainase baik.",
-      care: "Sirami rutin pagi/sore, beri pupuk kandang dan pestisida organik untuk hama daun."
+      name: "Cabai 🌶️",
+      planting: "Semai benih di tray, lalu tanam di tanah gembur dengan sinar cukup.",
+      care: "Siram pagi/sore, beri pupuk organik, dan lindungi dari hama."
     };
   } else if (temp >= 20 && temp <= 35 && humidity <= 50 && soil > 2500) {
     return {
-      name: "Kaktus",
-      planting: "Tanam di media berpasir, berdrainase tinggi. Jangan terlalu dalam.",
-      care: "Letakkan di area terang, siram 1–2 minggu sekali. Hindari tanah lembab."
+      name: "Kaktus 🌵",
+      planting: "Tanam di pot berpasir, jangan terlalu dalam.",
+      care: "Taruh di tempat terang, siram 1–2 minggu sekali saja."
     };
   } else {
     return {
-      name: "Tidak ada yang cocok",
-      planting: "Kondisi lingkungan tidak cocok untuk tanaman standar.",
+      name: "Tidak cocok ❌",
+      planting: "Lingkungan saat ini tidak cocok untuk tanaman yang umum.",
       care: "-"
     };
   }
@@ -52,10 +52,10 @@ function fetchLatestData() {
         document.getElementById("careGuide").textContent = "-";
       }
 
-      console.log("Suhu:", suhu, "| Kelembapan:", kelembapan, "| Tanah:", tanah);
+      console.log("📡 Update:", suhu, kelembapan, tanah);
     })
     .catch(err => {
-      console.error("Gagal mengambil data dari ThingSpeak:", err);
+      console.error("⚠️ Gagal ambil data dari ThingSpeak:", err);
     });
 }
 
