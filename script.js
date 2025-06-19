@@ -3,18 +3,12 @@ import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10
 
 const firebaseConfig = {
   apiKey: "AIzaSyB2TnzeIu4bYewXBTxcMR41DiTqCja53_Q",
-  authDomain: "iot-haidar.firebaseapp.com",
-  databaseURL: "https://iot-haidar-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "iot-haidar",
-  storageBucket: "iot-haidar.appspot.com",
-  messagingSenderId: "863414396307",
-  appId: "1:863414396307:web:18900ca6dfb76903343466"
+  databaseURL: "https://iot-haidar-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Menggunakan ID element yang sudah ada di UI Anda
 onValue(ref(db, 'sensor'), (snapshot) => {
   const data = snapshot.val();
   if (!data) return;
@@ -23,20 +17,16 @@ onValue(ref(db, 'sensor'), (snapshot) => {
   const lastKey = Object.keys(data).pop();
   const lastData = data[lastKey];
 
-  // Update UI yang sudah ada
+  // Update UI TANPA mengubah struktur
+  document.getElementById('suhu').textContent = lastData.suhu.toFixed(1);
+  document.getElementById('kelembapan').textContent = lastData.kelembapan.toFixed(1);
   document.getElementById('tanah').textContent = lastData.tanah;
-  
-  // Logika rekomendasi tanaman (persis seperti sebelumnya)
-  const kelembapanTanah = parseInt(lastData.tanah);
+
+  // Rekomendasi tanaman (logika original)
+  const tanah = parseInt(lastData.tanah);
   const rekom = document.getElementById('rekomendasi');
   
-  if (!kelembapanTanah) {
-    rekom.textContent = "⚠️ Data tidak terbaca. Periksa koneksi sensor.";
-  } else if (kelembapanTanah < 1000) {
-    rekom.textContent = "Tanah sangat kering, cocok untuk kaktus atau sukulen.";
-  } else if (kelembapanTanah < 2500) {
-    rekom.textContent = "Tanah cukup lembap, cocok untuk tanaman sayur.";
-  } else {
-    rekom.textContent = "Tanah sangat lembap, cocok untuk tanaman air atau padi.";
-  }
+  if (tanah < 1000) rekom.textContent = "Tanah kering, cocok untuk kaktus";
+  else if (tanah < 2500) rekom.textContent = "Tanah lembap, cocok untuk sayuran";
+  else rekom.textContent = "Tanah basah, cocok untuk padi";
 });
